@@ -1,3 +1,5 @@
+const ticksPerSecond = 20;
+
 var serverSystem = server.registerSystem(0, 0);
 
 // Setup which events to listen for
@@ -12,6 +14,7 @@ serverSystem.initialize = function () {
 	serverSystem.listenForEvent("gettingstarted:pinky", eventData => receivePinkyMessage(eventData));
 
 
+
 	// Enable full logging, useful for seeing errors, you will probably want to disable this for
 	// release versions of your scripts.
 	// Generally speaking it's not recommended to use broadcastEvent in initialize, but for configuring logging it's fine.
@@ -20,36 +23,70 @@ serverSystem.initialize = function () {
 	scriptLoggerConfig.data.log_information = true;
 	scriptLoggerConfig.data.log_warnings = true;
 	serverSystem.broadcastEvent("minecraft:script_logger_config", scriptLoggerConfig);
+
+	//OTHER
+	// let chatEventData = serverSystem.createEventData("minecraft:display_chat_event");
+	// chatEventData.data.message = "called.";
+	// serverSystem.broadcastEvent("minecraft:display_chat_event", chatEventData);
+	// DaylightCycleManager();
 }
 
 
 serverSystem.commandCallback = function (commandResultData) {
 	let eventData = this.createEventData("minecraft:display_chat_event");
 	if (eventData) {
-		// eventData.data.message = JSON.stringify(commandResultData.data, null, "    ");
-		eventData.data.message = commandResultData.data.body.split(" ")[2];
+		eventData.data.message = JSON.stringify(commandResultData.data, null, "    ");
+		// eventData.data.message = commandResultData.data.body.split(" ")[2];
 		this.broadcastEvent("minecraft:display_chat_event", eventData);
+	}
+};
+
+//TIME BASED FUNCTIONS
+
+//set to daytime : /gamerule doDaylightCycle false
+//stop game from computing time: /ga
+//look at game day time and if approaching night set to day
+//set how long a certain time of day based on a range ex: timeset 13000 24000 10min sets night time to be 10 min long
+//(this will last even as api def changes for noon, midnight etc)
+//^^^ no. scale with normal time. if you want a 1min day and 1 min night, set each min lol.
+//option to scale whole game day cycle
+//use executeCommand
+//what about when user logs out
+//make a singleton
+	let numCycles = 0;
+const DaylightCycleManager = () =>
+{
+	// let chatEventData = serverSystem.createEventData("minecraft:display_chat_event");
+	// chatEventData.data.message = "called.";
+	// serverSystem.broadcastEvent("minecraft:display_chat_event", chatEventData);
+	//
+
+	serverSystem.executeCommand("/gamerule doDaylightCycle false", () => {});
+
+
+	if (tickCount % 100 === 0)
+	{
+		numCycles++;
+		(numCycles % 2 === 0) ?
+			serverSystem.executeCommand("/time set day", () => {}) :
+			serverSystem.executeCommand("/time set night", () => {});
 	}
 };
 
 let tickCount = 0;
 // per-tick updates
-serverSystem.update = function() {
+serverSystem.update = function()
+{
 	tickCount++;
-
-	if (tickCount % 100 === 0)
+	if (tickCount === 100)
 	{
 		let chatEventData = serverSystem.createEventData("minecraft:display_chat_event");
-		chatEventData.data.message = "10 seconds have passed";
-
+		chatEventData.data.message = "firstttt";
 		serverSystem.broadcastEvent("minecraft:display_chat_event", chatEventData);
+		// DaylightCycleManager(tickCount);
 
-		// serverSystem.executeCommand("/time set day", () => {});
-		serverSystem.executeCommand("/time query daytime", (commandResultData) => this.commandCallback(commandResultData));
-
-		 	// this.commandCallback(commandResultData));
 	}
-	// Any logic that needs to happen every tick on the server.
+	DaylightCycleManager(tickCount);
 }
 
 function receivePinkyMessage(parameters) {
