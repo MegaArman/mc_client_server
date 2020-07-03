@@ -53,26 +53,27 @@ serverSystem.commandCallback = function (commandResultData) {
 //use executeCommand
 //what about when user logs out
 //make a singleton
-	let numCycles = 0;
+
 const DaylightCycleManager = () =>
 {
-	// let chatEventData = serverSystem.createEventData("minecraft:display_chat_event");
-	// chatEventData.data.message = "called.";
-	// serverSystem.broadcastEvent("minecraft:display_chat_event", chatEventData);
-	//
-
 	serverSystem.executeCommand("/gamerule doDaylightCycle false", () => {});
-
-
-	if (tickCount % 100 === 0)
+	let numCycles = 0;
+	const dayLightCycleManager = {};
+	dayLightCycleManager.update = (tickCount) =>
 	{
-		numCycles++;
-		(numCycles % 2 === 0) ?
-			serverSystem.executeCommand("/time set day", () => {}) :
-			serverSystem.executeCommand("/time set night", () => {});
+		if (tickCount % 100 === 0)
+		{
+			numCycles++;
+			(numCycles % 2 === 0) ?
+				serverSystem.executeCommand("/time set day", () => {}) :
+				serverSystem.executeCommand("/time set night", () => {});
+		}
 	}
+
+	return Object.freeze(dayLightCycleManager);
 };
 
+let dcm = DaylightCycleManager();
 let tickCount = 0;
 // per-tick updates
 serverSystem.update = function()
@@ -81,12 +82,10 @@ serverSystem.update = function()
 	if (tickCount === 100)
 	{
 		let chatEventData = serverSystem.createEventData("minecraft:display_chat_event");
-		chatEventData.data.message = "firstttt";
+		chatEventData.data.message = "five sec mark";
 		serverSystem.broadcastEvent("minecraft:display_chat_event", chatEventData);
-		// DaylightCycleManager(tickCount);
-
 	}
-	DaylightCycleManager(tickCount);
+	dcm.update(tickCount);
 }
 
 function receivePinkyMessage(parameters) {
