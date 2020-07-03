@@ -22,8 +22,32 @@ serverSystem.initialize = function () {
 	serverSystem.broadcastEvent("minecraft:script_logger_config", scriptLoggerConfig);
 }
 
+
+serverSystem.commandCallback = function (commandResultData) {
+	let eventData = this.createEventData("minecraft:display_chat_event");
+	if (eventData) {
+		eventData.data.message = "Callback called! Command: " + commandResultData.command + " Data: " + JSON.stringify(commandResultData.data, null, "    ");
+		this.broadcastEvent("minecraft:display_chat_event", eventData);
+	}
+};
+
+let tickCount = 0;
 // per-tick updates
 serverSystem.update = function() {
+	tickCount++;
+
+	if (tickCount % 100 === 0)
+	{
+		let chatEventData = serverSystem.createEventData("minecraft:display_chat_event");
+		chatEventData.data.message = "10 seconds have passed";
+
+		serverSystem.broadcastEvent("minecraft:display_chat_event", chatEventData);
+
+		// serverSystem.executeCommand("/time set day", () => {});
+		serverSystem.executeCommand("/time query daytime", (commandResultData) => this.commandCallback(commandResultData));
+
+		 	// this.commandCallback(commandResultData));
+	}
 	// Any logic that needs to happen every tick on the server.
 }
 
