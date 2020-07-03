@@ -26,7 +26,8 @@ serverSystem.initialize = function () {
 serverSystem.commandCallback = function (commandResultData) {
 	let eventData = this.createEventData("minecraft:display_chat_event");
 	if (eventData) {
-		eventData.data.message = "Callback called! Command: " + commandResultData.command + " Data: " + JSON.stringify(commandResultData.data, null, "    ");
+		// eventData.data.message = JSON.stringify(commandResultData.data, null, "    ");
+		eventData.data.message = commandResultData.data.body.split(" ")[2];
 		this.broadcastEvent("minecraft:display_chat_event", eventData);
 	}
 };
