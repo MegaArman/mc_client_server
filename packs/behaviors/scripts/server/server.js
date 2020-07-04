@@ -1,6 +1,7 @@
-const ticksPerSecond = 20;
 
 var serverSystem = server.registerSystem(0, 0);
+let dcm;
+// const dcm = require("./DayLightCycleManager")(serverSystem);
 
 // Setup which events to listen for
 serverSystem.initialize = function () {
@@ -29,6 +30,7 @@ serverSystem.initialize = function () {
 	// chatEventData.data.message = "called.";
 	// serverSystem.broadcastEvent("minecraft:display_chat_event", chatEventData);
 	// DaylightCycleManager();
+	dcm = require("./DaylightCycleManager")(serverSystem);
 }
 
 
@@ -54,26 +56,25 @@ serverSystem.commandCallback = function (commandResultData) {
 //what about when user logs out
 //make a singleton
 
-const DaylightCycleManager = () =>
-{
-	serverSystem.executeCommand("/gamerule doDaylightCycle false", () => {});
-	let numCycles = 0;
-	const dayLightCycleManager = {};
-	dayLightCycleManager.update = (tickCount) =>
-	{
-		if (tickCount % 100 === 0)
-		{
-			numCycles++;
-			(numCycles % 2 === 0) ?
-				serverSystem.executeCommand("/time set day", () => {}) :
-				serverSystem.executeCommand("/time set night", () => {});
-		}
-	}
+// const DaylightCycleManager = () =>
+// {
+// 	serverSystem.executeCommand("/gamerule doDaylightCycle false", () => {});
+// 	let numCycles = 0;
+// 	const dayLightCycleManager = {};
+// 	dayLightCycleManager.update = (tickCount) =>
+// 	{
+// 		if (tickCount % 100 === 0)
+// 		{
+// 			numCycles++;
+// 			(numCycles % 2 === 0) ?
+// 				serverSystem.executeCommand("/time set day", () => {}) :
+// 				serverSystem.executeCommand("/time set night", () => {});
+// 		}
+// 	}
+//
+// 	return Object.freeze(dayLightCycleManager);
+// };
 
-	return Object.freeze(dayLightCycleManager);
-};
-
-let dcm = DaylightCycleManager();
 let tickCount = 0;
 // per-tick updates
 serverSystem.update = function()
