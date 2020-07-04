@@ -1,5 +1,5 @@
 {
-  "name": "gettingstarted",
+  "name": "customdaylightcycle",
   "private": true,
   "scripts": {
     "build": "gulp build",

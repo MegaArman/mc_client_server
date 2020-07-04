@@ -6,13 +6,13 @@ const dcm = require("./DaylightCycleManager")(serverSystem);
 serverSystem.initialize = () =>
 {
 	// Enable full logging, useful for seeing errors
-	const scriptLoggerConfig = serverSystem
-		.createEventData("minecraft:script_logger_config");
-	scriptLoggerConfig.data.log_errors = true;
-	scriptLoggerConfig.data.log_information = true;
-	scriptLoggerConfig.data.log_warnings = true;
-	serverSystem
-		.broadcastEvent("minecraft:script_logger_config", scriptLoggerConfig);
+	// const scriptLoggerConfig = serverSystem
+	// 	.createEventData("minecraft:script_logger_config");
+	// scriptLoggerConfig.data.log_errors = true;
+	// scriptLoggerConfig.data.log_information = true;
+	// scriptLoggerConfig.data.log_warnings = true;
+	// serverSystem
+	// 	.broadcastEvent("minecraft:script_logger_config", scriptLoggerConfig);
 };
 
 serverSystem.commandCallback =  (commandResultData) =>

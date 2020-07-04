@@ -1,8 +1,8 @@
 {
   "format_version": 1,
   "header": {
-    "name": "Getting Started Behaviors",
-    "description": "demo",
+    "name": "Custom Daylight Cycles",
+    "description": "change from day/night at different rates",
     "uuid": "a3b525d2-50d5-4222-aa23-4133dfa73102",
     "version": [
       1,
@@ -12,7 +12,7 @@
   },
   "modules": [
     {
-      "description": "behaviours for Getting Started",
+      "description": "behaviours for Custom Daylight Cycles",
       "type": "client_data",
       "uuid": "91495c24-1fb4-4eb8-b6f9-b7f90c18cf19",
       "version": [
