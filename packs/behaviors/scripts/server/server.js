@@ -28,6 +28,8 @@ serverSystem.commandCallback =  (commandResultData) =>
 };
 
 let tickCount = 0;
+dcm.setDayLength(40);
+dcm.setNightLength(200);
 serverSystem.update = function()
 {
 	tickCount++;
