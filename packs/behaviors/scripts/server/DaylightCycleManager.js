@@ -24,6 +24,9 @@ daylightCycleManager.setNightLength = (length) =>
 	nightLength = length;
 };
 
+daylightCycleManager.getDayLength = () => dayLength;
+daylightCycleManager.getNightLength = () => nightLength;
+
 daylightCycleManager.update = (tickCount) =>
 {
 	if (timeOfDay === DAY && (tickCount % dayLength === 0)) //5 sec passed
