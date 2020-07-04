@@ -1,48 +1,51 @@
 "use strict";
 const DAY = "day";
 const NIGHT = "night";
+let system;
+let timeOfDay = DAY; //TODO should be game depending
+let dayLength = 100;
+let nightLength = 100;
 
-//TODO make singleton?
-module.exports = (system) =>
+const timeSet = () =>
 {
-
-	system.executeCommand("/gamerule doDaylightCycle false", () =>
+	system.executeCommand(`/time set ${timeOfDay}`, () =>
 	{
 	});
-	const daylightCycleManager = {};
-	let timeOfDay = DAY; //TODO should be game depending
-	let dayLength = 100;
-	let nightLength = 100;
+};
 
-	const timeSet = () =>
+const daylightCycleManager = {};
+daylightCycleManager.setDayLength = (length) =>
+{
+	dayLength = length;
+};
+
+daylightCycleManager.setNightLength = (length) =>
+{
+	nightLength = length;
+};
+
+daylightCycleManager.update = (tickCount) =>
+{
+	if (timeOfDay === DAY && (tickCount % dayLength === 0)) //5 sec passed
 	{
-		system.executeCommand(`/time set ${timeOfDay}`, () =>
+		timeOfDay = NIGHT;
+		timeSet();
+	}
+	else if (timeOfDay === NIGHT && (tickCount % nightLength === 0))
+	{
+		timeOfDay = DAY;
+		timeSet();
+	}
+};
+module.exports = (sys) =>
+{
+	if (system === undefined)
+	{
+		system = sys;
+		system.executeCommand("/gamerule doDaylightCycle false", () =>
 		{
 		});
-	};
+	}
 
-  daylightCycleManager.setDayLength = (length) =>
-	{
-		dayLength = length;
-	};
-
-  daylightCycleManager.setNightLength = (length) =>
-	{
-		nightLength = length;
-	};
-
-	daylightCycleManager.update = (tickCount) =>
-	{
-		if (timeOfDay === DAY && (tickCount % dayLength === 0)) //5 sec passed
-		{
-			timeOfDay = NIGHT;
-			timeSet();
-		}
-		else if (timeOfDay === NIGHT && (tickCount % nightLength === 0))
-		{
-			timeOfDay = DAY;
-			timeSet();
-		}
-	};
 	return Object.freeze(daylightCycleManager);
 };
